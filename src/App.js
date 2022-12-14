@@ -1,56 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import './App.css';
+import Table from './app/Table/table';
+import { setState } from './app/redux/reducer';
 
 function App() {
+  const [columns, setColumns] = useState('');
+  const [rows, setRows] = useState('');
+  const [cells, setCells] = useState('');
+  const [showMatrix, setShowMatrix] = useState(false);
+
+  const dispatch = useDispatch();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div className="Main">
+      <div className="matrixBuilder">
+        <h2>Matrix Builder</h2>
+        <div className="columns">
+          <p>Enter the number of colums</p>
+          <input
+            value={columns}
+            onChange={(e) => setColumns(e.target.value)}
+          ></input>
+        </div>
+        <div className="rows">
+          <p>Enter the number of rows</p>
+          <input value={rows} onChange={(e) => setRows(e.target.value)}></input>
+        </div>
+        <div className="cells">
+          <p>Enter the number of cells</p>
+          <input
+            value={cells}
+            onChange={(e) => setCells(e.target.value)}
+          ></input>
+        </div>
+        <button
+          className="button"
+          onClick={() => {
+            dispatch(setState({ columns, rows }));
+            setShowMatrix(true);
+          }}
+        >
+          Create Matrix
+        </button>
+
+        {showMatrix && <Table columns={columns} />}
+      </div>
     </div>
   );
 }

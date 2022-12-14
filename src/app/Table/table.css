@@ -1,0 +1,72 @@
+.tableSumBtn {
+  display: flex;
+  flex-direction: row;
+}
+
+/* .avg {
+  display: flex;
+  flex-direction: row;
+  margin-right: 10px;
+  margin-bottom: 10px;
+} */
+
+.avgBtn {
+  background-color: green;
+  display: flex;
+  flex-direction: row;
+  border: 2px solid black;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.avgMain {
+  display: flex;
+  flex-direction: row;
+}
+
+.rowsTable {
+  display: flex;
+  flex-direction: row;
+}
+
+.rowsNum {
+  display: flex;
+  /* flex-direction: row;
+  border: 2px solid black; */
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.sum {
+  border: 2px solid black;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background-color: green;
+}
+
+.mainTable {
+  display: flex;
+  flex-direction: column;
+}
+
+.sumsprava {
+  display: flex;
+  flex-direction: row;
+}
+
+.abv {
+  display: flex;
+  flex-direction: row;
+}
+
+.numeric {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.oso {
+  display: flex;
+  flex-direction: row;
+}
