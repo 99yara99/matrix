@@ -1,10 +1,39 @@
 import { useSelector, useDispatch } from 'react-redux';
 import './table.css';
-import { addRow, deleteRow, increment } from '../redux/reducer';
+import { addRow, deleteRow, increment } from '../redux/matrixReducer';
+import { useState } from 'react';
 
-function Table({ columns }) {
+function Table({ columns, cells }) {
   const table = useSelector((state) => state.matrix);
   const dispatch = useDispatch();
+  const [closeNumbers, setCloseNumbers] = useState(null);
+  const [indexOfArray, setIndexOfArray] = useState(null);
+  console.log(indexOfArray);
+  const findClosestNum = (goal) => {
+    let result = [];
+    let stateArr = [];
+
+    table.map((array) => {
+      return array.map((obj) => {
+        return stateArr.push(obj.amount);
+      });
+    });
+
+    stateArr.splice(stateArr.indexOf(goal), 1);
+
+    for (let i = 0; i < cells; i++) {
+      const num = stateArr.reduce((prev, curr) =>
+        Math.abs(curr - goal) < Math.abs(prev - goal) && curr !== goal
+          ? curr
+          : prev
+      );
+
+      result.push(num);
+
+      stateArr.splice(stateArr.indexOf(num), 1);
+    }
+    setCloseNumbers(result);
+  };
 
   const createTable = (matrice) => {
     return (
@@ -13,47 +42,75 @@ function Table({ columns }) {
           {matrice.map((rowsArr, index) => (
             <div className="tableSumBtn">
               <div className="rowsTable">
-                {rowsArr.map((num, indexof) => (
-                  <>
+                {rowsArr.map((obj, indexof) => {
+                  let percent = `${Math.round(
+                    (obj.amount /
+                      rowsArr.reduce((next, object) => {
+                        return next + object.amount;
+                      }, 0)) *
+                      100
+                  )}%`;
+                  return (
                     <div
                       className="rowsNum"
+                      style={{
+                        backgroundColor: closeNumbers?.includes(obj.amount)
+                          ? 'yellow'
+                          : 'transparent',
+                      }}
                       onMouseOver={(event) => {
                         event.target.style.background = 'red';
+                        findClosestNum(obj.amount);
                       }}
                       onMouseOut={(event) => {
-                        event.target.style.background = '';
+                        event.target.style.background = 'transparent';
+                        setCloseNumbers(null);
                       }}
-                      key={num.id}
+                      onClick={() => {
+                        dispatch(
+                          increment({
+                            rows: index,
+                            columns: indexof,
+                            amount: obj.amount,
+                          })
+                        );
+                      }}
+                      key={obj.id}
                     >
-                      <button
-                        onClick={() => {
-                          dispatch(
-                            increment({
-                              rows: index,
-                              columns: indexof,
-                              amount: num.amount,
-                            })
-                          );
-                        }}
-                      >
-                        {num.amount}
-                      </button>
+                      <span className="spanNum">
+                        {index === indexOfArray ? percent : obj.amount}
+                      </span>
+                      {index === indexOfArray && (
+                        <div
+                          className="backgroundRowsNum"
+                          style={{ height: percent }}
+                        ></div>
+                      )}
                     </div>
-                  </>
-                ))}
-                <div className="sum">
+                  );
+                })}
+                <div
+                  className="sum"
+                  onMouseOver={() => {
+                    setIndexOfArray(index);
+                  }}
+                  onMouseOut={() => {
+                    setIndexOfArray(null);
+                  }}
+                >
                   {rowsArr.reduce((next, object) => {
-                    return next + (object.amount || object);
+                    return next + object.amount;
                   }, 0)}
                 </div>
               </div>
               <div className="buttonClose">
                 <button
+                  className="closeBtn"
                   onClick={() => {
                     dispatch(deleteRow(index));
                   }}
                 >
-                  x
+                  ✖
                 </button>
               </div>
             </div>
@@ -62,9 +119,7 @@ function Table({ columns }) {
         <div className="oso">
           <div className="avgMain">
             {culcAvg(matrice).map((elem) => (
-              <div className="avg">
-                <button className="avgBtn">{elem}</button>
-              </div>
+              <div className="avg">{elem}</div>
             ))}
           </div>
           <div className="avgBtn">

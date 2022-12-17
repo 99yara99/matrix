@@ -3,17 +3,25 @@
   flex-direction: row;
 }
 
-/* .avg {
+.avg {
   display: flex;
   flex-direction: row;
+  background-color: green;
   margin-right: 10px;
   margin-bottom: 10px;
-} */
+}
+.closeBtn {
+  border: none;
+}
+
+.closeBtn:hover {
+  background-color: red;
+}
 
 .avgBtn {
-  background-color: green;
   display: flex;
   flex-direction: row;
+  background-color: green;
   border: 2px solid black;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -30,11 +38,27 @@
 }
 
 .rowsNum {
+  width: 35px;
+  height: 35px;
+  position: relative;
   display: flex;
-  /* flex-direction: row;
-  border: 2px solid black; */
+  cursor: pointer;
+  /* border: 2px solid black; */
   margin-right: 10px;
   margin-bottom: 10px;
+}
+
+.backgroundRowsNum {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: red;
+}
+
+.spanNum {
+  z-index: 2;
 }
 
 .sum {

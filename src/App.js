@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import './App.css';
 import Table from './app/Table/table';
-import { setState } from './app/redux/reducer';
+import { setState } from './app/redux/matrixReducer';
 
 function App() {
   const [columns, setColumns] = useState('');
@@ -44,7 +44,7 @@ function App() {
           Create Matrix
         </button>
 
-        {showMatrix && <Table columns={columns} />}
+        {showMatrix && <Table columns={columns} cells={cells} />}
       </div>
     </div>
   );
