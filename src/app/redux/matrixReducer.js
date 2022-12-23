@@ -12,26 +12,30 @@ const matrixSlice = createSlice({
   initialState: [],
   reducers: {
     setState: (state, action) => {
+      let matrix = [];
       for (let i = 0; i < action.payload.rows; i++) {
-        state[i] = [];
+        matrix[i] = [];
         for (let j = 0; j < action.payload.columns; j++) {
-          state[i][j] = { id: nanoid(), amount: getRandomInt() };
+          matrix[i][j] = { id: nanoid(), amount: getRandomInt() };
         }
       }
-      return state;
+      let columns = action.payload.columns;
+      let rows = action.payload.rows;
+      let cells = action.payload.cells;
+      return { table: matrix, columns, rows, cells };
     },
     addRow: (state, action) => {
       let arrayinsert = [];
       for (let j = 0; j < action.payload; j++) {
         arrayinsert.push({ id: nanoid(), amount: getRandomInt() });
       }
-      state.push(arrayinsert);
+      state.table.push(arrayinsert);
     },
     deleteRow: (state, action) => {
-      state.splice(action.payload, 1);
+      state.table.splice(action.payload, 1);
     },
     increment: (state, action) => {
-      state[action.payload.rows][action.payload.columns] = {
+      state.table[action.payload.rows][action.payload.columns] = {
         id: nanoid(),
         amount: action.payload.amount + 1,
       };

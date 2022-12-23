@@ -1,0 +1,157 @@
+.tableSumBtn {
+  display: flex;
+  flex-direction: row;
+}
+
+.closeBtn {
+  border: none;
+}
+
+.closeBtn:hover {
+  background-color: red;
+}
+
+.avgSum {
+  width: 55px;
+  height: 35px;
+  border-radius: 5px;
+  display: flex;
+  background-color: #27a300;
+  margin-right: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.avgMain {
+  display: flex;
+  flex-direction: row;
+}
+
+.avg {
+  width: 55px;
+  height: 35px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #27a300;
+  margin-right: 5px;
+}
+
+.avgText {
+  color: aliceblue;
+  font-weight: 500;
+}
+
+.avgAll {
+  display: flex;
+  flex-direction: row;
+}
+
+.rowsTable {
+  display: flex;
+  flex-direction: row;
+}
+
+.rowsNum {
+  width: 55px;
+  height: 35px;
+  border-radius: 5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 4;
+  margin-right: 5px;
+}
+
+.backgroundRowsNum {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: red;
+}
+
+.spanNum {
+  position: absolute;
+  color: #005f73;
+  font-weight: 500;
+  z-index: 3;
+}
+
+.sum {
+  width: 55px;
+  height: 35px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  background-color: #27a300;
+}
+
+.sumText {
+  color: aliceblue;
+  font-weight: 500;
+}
+
+.mainTable {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btnAdd {
+  width: 120px;
+  height: 30px;
+  margin-top: 20px;
+  background-color: yellow;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px grey;
+}
+
+.btnAddText {
+  color: blue;
+  font-weight: bold;
+}
+
+.tableAll {
+  margin-top: 20px;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+}
+
+.columnsNumberAll {
+  display: flex;
+  flex-direction: row;
+  margin-left: 2px;
+}
+
+.columnsNumber {
+  display: flex;
+  flex-direction: row;
+  width: 50px;
+  height: 35px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.headerSum,
+.headerNum,
+.headerAvg,
+.rowsIndex {
+  width: 50px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

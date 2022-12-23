@@ -1,14 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
 import './table.css';
-import { addRow, deleteRow, increment } from '../redux/matrixReducer';
+import { addRow, deleteRow, increment } from '../../redux/matrixReducer';
 import { useState } from 'react';
 
-function Table({ columns, cells }) {
-  const table = useSelector((state) => state.matrix);
+function Table() {
+  const { table, columns, cells } = useSelector((state) => state.matrix);
   const dispatch = useDispatch();
   const [closeNumbers, setCloseNumbers] = useState(null);
   const [indexOfArray, setIndexOfArray] = useState(null);
-  console.log(indexOfArray);
+
   const findClosestNum = (goal) => {
     let result = [];
     let stateArr = [];
@@ -35,12 +35,50 @@ function Table({ columns, cells }) {
     setCloseNumbers(result);
   };
 
+  const culcAvg = (matrice) => {
+    let avg = [];
+    for (let i = 0; i < matrice.length; i++) {
+      for (let j = 0; j < matrice[i].length; j++) {
+        avg[j] = Math.round(
+          (avg[j] || 0) + matrice[i][j].amount / matrice.length
+        );
+      }
+    }
+    return avg;
+  };
+
+  const renderColNum = () => {
+    let arr = [];
+    for (let i = 1; i <= columns; i++) {
+      arr.push(i);
+    }
+    return arr;
+  };
+
   const createTable = (matrice) => {
     return (
       <>
+        <div className="header">
+          <div className="headerNum">
+            <span>№</span>
+          </div>
+          <div className="columnsNumberAll">
+            {renderColNum().map((elem) => {
+              return (
+                <div className="columnsNumber">
+                  <span>{elem}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="headerSum">
+            <span>Sum</span>
+          </div>
+        </div>
         <div>
           {matrice.map((rowsArr, index) => (
             <div className="tableSumBtn">
+              <div className="rowsIndex">{index + 1}</div>
               <div className="rowsTable">
                 {rowsArr.map((obj, indexof) => {
                   let percent = `${Math.round(
@@ -56,14 +94,15 @@ function Table({ columns, cells }) {
                       style={{
                         backgroundColor: closeNumbers?.includes(obj.amount)
                           ? 'yellow'
-                          : 'transparent',
+                          : 'aquamarine',
                       }}
-                      onMouseOver={(event) => {
-                        event.target.style.background = 'red';
+                      onMouseEnter={(event) => {
+                        event.target.style.background = '#e63946';
+                        event.target.style.color = 'white';
                         findClosestNum(obj.amount);
                       }}
-                      onMouseOut={(event) => {
-                        event.target.style.background = 'transparent';
+                      onMouseLeave={(event) => {
+                        event.target.style.background = 'aquamarine';
                         setCloseNumbers(null);
                       }}
                       onClick={() => {
@@ -98,9 +137,11 @@ function Table({ columns, cells }) {
                     setIndexOfArray(null);
                   }}
                 >
-                  {rowsArr.reduce((next, object) => {
-                    return next + object.amount;
-                  }, 0)}
+                  <span className="sumText">
+                    {rowsArr.reduce((next, object) => {
+                      return next + object.amount;
+                    }, 0)}
+                  </span>
                 </div>
               </div>
               <div className="buttonClose">
@@ -116,38 +157,35 @@ function Table({ columns, cells }) {
             </div>
           ))}
         </div>
-        <div className="oso">
+        <div className="avgAll">
+          <div className="headerAvg">
+            <span>Avg</span>
+          </div>
           <div className="avgMain">
             {culcAvg(matrice).map((elem) => (
-              <div className="avg">{elem}</div>
+              <div className="avg">
+                <span className="avgText">{elem}</span>
+              </div>
             ))}
           </div>
-          <div className="avgBtn">
-            {culcAvg(matrice).reduce((next, object) => {
-              return next + (object.amount || object);
-            }, 0)}
+          <div className="avgSum">
+            <span className="avgText">
+              {culcAvg(matrice).reduce((next, object) => {
+                return next + (object.amount || object);
+              }, 0)}
+            </span>
           </div>
         </div>
       </>
     );
   };
 
-  const culcAvg = (matrice) => {
-    let avg = [];
-    for (let i = 0; i < matrice.length; i++) {
-      for (let j = 0; j < matrice[i].length; j++) {
-        avg[j] = Math.round(
-          (avg[j] || 0) + matrice[i][j].amount / matrice.length
-        );
-      }
-    }
-    return avg;
-  };
-
   return (
     <div className="mainTable">
-      <button onClick={() => dispatch(addRow(columns))}>Add row</button>
-      <div>{createTable(table)}</div>
+      <button className="btnAdd" onClick={() => dispatch(addRow(columns))}>
+        <span className="btnAddText">Add row</span>
+      </button>
+      <div className="tableAll">{createTable(table)}</div>
     </div>
   );
 }
