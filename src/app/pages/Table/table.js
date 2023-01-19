@@ -170,31 +170,30 @@ function Table() {
       return percent;
     };
 
-    const renderTable = () => {
-      return matrice.map((rowsArr, index) => (
-        <div className="tableSumBtn">
-          <div className="rowsIndex">{index + 1}</div>
-          <div className="rowsTable">
-            {renderCell(rowsArr, index)}
-            {renderSumColumn(index, rowsArr)}
-          </div>
-          <div className="buttonClose">
-            <button
-              className="closeBtn"
-              onClick={() => {
-                dispatch(deleteRow(index));
-              }}
-            >
-              ✖
-            </button>
-          </div>
-        </div>
-      ));
-    };
     return (
       <>
         <div className="header">{renderHeader()}</div>
-        <div>{renderTable()}</div>
+        <div>
+          {matrice.map((rowsArr, index) => (
+            <div className="tableSumBtn">
+              <div className="rowsIndex">{index + 1}</div>
+              <div className="rowsTable">
+                {renderCell(rowsArr, index)}
+                {renderSumColumn(index, rowsArr)}
+              </div>
+              <div className="buttonClose">
+                <button
+                  className="closeBtn"
+                  onClick={() => {
+                    dispatch(deleteRow(index));
+                  }}
+                >
+                  ✖
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="avgAll">{renderAvg()}</div>
       </>
     );
