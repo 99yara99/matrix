@@ -2,12 +2,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import './table.css';
 import { addRow, deleteRow, increment } from '../../redux/matrixReducer';
 import { useState } from 'react';
+import culcAvg from '../../utils/culculateAvarage';
 
 function Table() {
   const { table, columns, cells } = useSelector((state) => state.matrix);
   const dispatch = useDispatch();
   const [closeNumbers, setCloseNumbers] = useState(null);
   const [indexOfArray, setIndexOfArray] = useState(null);
+
+  const dispatchIncrement = (index, indexOf, obj) => {
+    return dispatch(
+      increment({
+        rows: index,
+        columns: indexOf,
+        amount: obj.amount,
+      })
+    );
+  };
 
   const findClosestNum = (goal) => {
     let result = [];
@@ -35,18 +46,6 @@ function Table() {
     setCloseNumbers(result);
   };
 
-  const culcAvg = (matrice) => {
-    let avg = [];
-    for (let i = 0; i < matrice.length; i++) {
-      for (let j = 0; j < matrice[i].length; j++) {
-        avg[j] = Math.round(
-          (avg[j] || 0) + matrice[i][j].amount / matrice.length
-        );
-      }
-    }
-    return avg;
-  };
-
   const renderColNum = () => {
     let arr = [];
     for (let i = 1; i <= columns; i++) {
@@ -56,9 +55,9 @@ function Table() {
   };
 
   const createTable = (matrice) => {
-    return (
-      <>
-        <div className="header">
+    const renderHeader = () => {
+      return (
+        <>
           <div className="headerNum">
             <span>№</span>
           </div>
@@ -74,90 +73,13 @@ function Table() {
           <div className="headerSum">
             <span>Sum</span>
           </div>
-        </div>
-        <div>
-          {matrice.map((rowsArr, index) => (
-            <div className="tableSumBtn">
-              <div className="rowsIndex">{index + 1}</div>
-              <div className="rowsTable">
-                {rowsArr.map((obj, indexof) => {
-                  let percent = `${Math.round(
-                    (obj.amount /
-                      rowsArr.reduce((next, object) => {
-                        return next + object.amount;
-                      }, 0)) *
-                      100
-                  )}%`;
-                  return (
-                    <div
-                      className="rowsNum"
-                      style={{
-                        backgroundColor: closeNumbers?.includes(obj.amount)
-                          ? 'yellow'
-                          : 'aquamarine',
-                      }}
-                      onMouseEnter={(event) => {
-                        event.target.style.background = '#e63946';
-                        event.target.style.color = 'white';
-                        findClosestNum(obj.amount);
-                      }}
-                      onMouseLeave={(event) => {
-                        event.target.style.background = 'aquamarine';
-                        setCloseNumbers(null);
-                      }}
-                      onClick={() => {
-                        dispatch(
-                          increment({
-                            rows: index,
-                            columns: indexof,
-                            amount: obj.amount,
-                          })
-                        );
-                      }}
-                      key={obj.id}
-                    >
-                      <span className="spanNum">
-                        {index === indexOfArray ? percent : obj.amount}
-                      </span>
-                      {index === indexOfArray && (
-                        <div
-                          className="backgroundRowsNum"
-                          style={{ height: percent }}
-                        ></div>
-                      )}
-                    </div>
-                  );
-                })}
-                <div
-                  className="sum"
-                  onMouseOver={() => {
-                    setIndexOfArray(index);
-                  }}
-                  onMouseOut={() => {
-                    setIndexOfArray(null);
-                  }}
-                >
-                  <span className="sumText">
-                    {rowsArr.reduce((next, object) => {
-                      return next + object.amount;
-                    }, 0)}
-                  </span>
-                </div>
-              </div>
-              <div className="buttonClose">
-                <button
-                  className="closeBtn"
-                  onClick={() => {
-                    dispatch(deleteRow(index));
-                  }}
-                >
-                  ✖
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="avgAll">
+        </>
+      );
+    };
+
+    const renderAvg = () => {
+      return (
+        <>
           <div className="headerAvg">
             <span>Avg</span>
           </div>
@@ -175,7 +97,105 @@ function Table() {
               }, 0)}
             </span>
           </div>
+        </>
+      );
+    };
+
+    const renderCell = (rowsArr, index) => {
+      return rowsArr.map((obj, indexOf) => {
+        return (
+          <div
+            className="rowsNum"
+            style={{
+              backgroundColor: closeNumbers?.includes(obj.amount)
+                ? 'yellow'
+                : 'aquamarine',
+            }}
+            onMouseEnter={(event) => {
+              event.target.style.background = '#e63946';
+              event.target.style.color = 'white';
+              findClosestNum(obj.amount);
+            }}
+            onMouseLeave={(event) => {
+              event.target.style.background = 'aquamarine';
+              setCloseNumbers(null);
+            }}
+            onClick={() => {
+              dispatchIncrement(index, indexOf, obj);
+            }}
+            key={obj.id}
+          >
+            <span className="spanNum">
+              {index === indexOfArray ? culcPercent(obj, rowsArr) : obj.amount}
+            </span>
+            {index === indexOfArray && (
+              <div
+                className="backgroundRowsNum"
+                style={{ height: culcPercent(obj, rowsArr) }}
+              ></div>
+            )}
+          </div>
+        );
+      });
+    };
+
+    const renderSumColumn = (index, rowsArr) => {
+      return (
+        <div
+          className="sum"
+          onMouseOver={() => {
+            setIndexOfArray(index);
+          }}
+          onMouseOut={() => {
+            setIndexOfArray(null);
+          }}
+        >
+          <span className="sumText">
+            {rowsArr.reduce((next, object) => {
+              return next + object.amount;
+            }, 0)}
+          </span>
         </div>
+      );
+    };
+
+    const culcPercent = (obj, rowsArr) => {
+      let percent = `${Math.round(
+        (obj.amount /
+          rowsArr.reduce((next, object) => {
+            return next + object.amount;
+          }, 0)) *
+          100
+      )}%`;
+      return percent;
+    };
+
+    const renderTable = () => {
+      return matrice.map((rowsArr, index) => (
+        <div className="tableSumBtn">
+          <div className="rowsIndex">{index + 1}</div>
+          <div className="rowsTable">
+            {renderCell(rowsArr, index)}
+            {renderSumColumn(index, rowsArr)}
+          </div>
+          <div className="buttonClose">
+            <button
+              className="closeBtn"
+              onClick={() => {
+                dispatch(deleteRow(index));
+              }}
+            >
+              ✖
+            </button>
+          </div>
+        </div>
+      ));
+    };
+    return (
+      <>
+        <div className="header">{renderHeader()}</div>
+        <div>{renderTable()}</div>
+        <div className="avgAll">{renderAvg()}</div>
       </>
     );
   };

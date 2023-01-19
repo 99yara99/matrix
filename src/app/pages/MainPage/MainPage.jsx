@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import './MainPage.css';
 import { Link } from 'react-router-dom';
 import { setState } from '../../redux/matrixReducer';
+import InputComponent from './InputComponent/input';
 
 function MainPage() {
   const [columns, setColumns] = useState('');
@@ -17,28 +18,25 @@ function MainPage() {
         <h2>Matrix Builder</h2>
         <div className="inputAll">
           <div className="inputDiv">
-            <p className="text">Enter the number of colums</p>
-            <input
-              className="input"
+            <InputComponent
               value={columns}
               onChange={(e) => setColumns(e.target.value)}
-            ></input>
+              textInput={'Enter the number of colums'}
+            />
           </div>
           <div className="inputDiv">
-            <p className="text">Enter the number of rows</p>
-            <input
-              className="input"
+            <InputComponent
               value={rows}
               onChange={(e) => setRows(e.target.value)}
-            ></input>
+              textInput={'Enter the number of rows'}
+            />
           </div>
           <div className="inputDiv">
-            <p className="text">Enter the number of cells</p>
-            <input
-              className="input"
+            <InputComponent
               value={cells}
               onChange={(e) => setCells(e.target.value)}
-            ></input>
+              textInput={'Enter the number of cells'}
+            />
           </div>
         </div>
 

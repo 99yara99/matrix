@@ -1,0 +1,15 @@
+.text {
+  color: white;
+  font-weight: 500;
+  float: left;
+}
+
+.input {
+  height: 22px;
+  width: 55px;
+  margin-left: 25px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  box-shadow: 0px 1px #000;
+}
