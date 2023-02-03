@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../../hooks';
 import './MainPage.css';
 import { Link } from 'react-router-dom';
 import { setState } from '../../redux/matrixReducer';
 import InputComponent from './InputComponent/input';
 
 function MainPage() {
-  const [columns, setColumns] = useState('');
-  const [rows, setRows] = useState('');
-  const [cells, setCells] = useState('');
+  const [columns, setColumns] = useState<number>(0);
+  const [rows, setRows] = useState<number>(0);
+  const [cells, setCells] = useState<number>(0);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div className="Main">
@@ -20,21 +20,21 @@ function MainPage() {
           <div className="inputDiv">
             <InputComponent
               value={columns}
-              onChange={(e) => setColumns(e.target.value)}
+              onChange={(e) => setColumns(Number(e.target.value))}
               textInput={'Enter the number of colums'}
             />
           </div>
           <div className="inputDiv">
             <InputComponent
               value={rows}
-              onChange={(e) => setRows(e.target.value)}
+              onChange={(e) => setRows(Number(e.target.value))}
               textInput={'Enter the number of rows'}
             />
           </div>
           <div className="inputDiv">
             <InputComponent
               value={cells}
-              onChange={(e) => setCells(e.target.value)}
+              onChange={(e) => setCells(Number(e.target.value))}
               textInput={'Enter the number of cells'}
             />
           </div>

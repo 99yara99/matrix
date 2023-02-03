@@ -1,16 +1,22 @@
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useAppSelector, useAppDispatch } from '../../../hooks';
 import './table.css';
 import { addRow, deleteRow, increment } from '../../redux/matrixReducer';
 import { useState } from 'react';
 import culcAvg from '../../utils/culculateAvarage';
+import { MatrixCell } from '../../../types';
 
 function Table() {
-  const { table, columns, cells } = useSelector((state) => state.matrix);
-  const dispatch = useDispatch();
-  const [closeNumbers, setCloseNumbers] = useState(null);
-  const [indexOfArray, setIndexOfArray] = useState(null);
+  const { table, columns, cells } = useAppSelector((state) => state.matrix);
+  const dispatch = useAppDispatch();
+  const [closeNumbers, setCloseNumbers] = useState<number[]>();
+  const [indexOfArray, setIndexOfArray] = useState<number>();
 
-  const dispatchIncrement = (index, indexOf, obj) => {
+  const dispatchIncrement = (
+    index: number,
+    indexOf: number,
+    obj: MatrixCell
+  ) => {
     return dispatch(
       increment({
         rows: index,
@@ -20,9 +26,9 @@ function Table() {
     );
   };
 
-  const findClosestNum = (goal) => {
-    let result = [];
-    let stateArr = [];
+  const findClosestNum = (goal: number) => {
+    let result: number[] = [];
+    let stateArr: number[] = [];
 
     table.map((array) => {
       return array.map((obj) => {
@@ -32,29 +38,33 @@ function Table() {
 
     stateArr.splice(stateArr.indexOf(goal), 1);
 
-    for (let i = 0; i < cells; i++) {
-      const num = stateArr.reduce((prev, curr) =>
-        Math.abs(curr - goal) < Math.abs(prev - goal) && curr !== goal
-          ? curr
-          : prev
-      );
+    if (cells) {
+      for (let i = 0; i < cells; i++) {
+        const num = stateArr.reduce((prev, curr) =>
+          Math.abs(curr - goal) < Math.abs(prev - goal) && curr !== goal
+            ? curr
+            : prev
+        );
 
-      result.push(num);
+        result.push(num);
 
-      stateArr.splice(stateArr.indexOf(num), 1);
+        stateArr.splice(stateArr.indexOf(num), 1);
+      }
     }
     setCloseNumbers(result);
   };
 
   const renderColNum = () => {
-    let arr = [];
-    for (let i = 1; i <= columns; i++) {
-      arr.push(i);
+    let arr: number[] = [];
+    if (columns) {
+      for (let i = 1; i <= columns; i++) {
+        arr.push(i);
+      }
+      return arr;
     }
-    return arr;
   };
 
-  const createTable = (matrice) => {
+  const createTable = (matrice: MatrixCell[][]) => {
     const renderHeader = () => {
       return (
         <>
@@ -62,7 +72,7 @@ function Table() {
             <span>№</span>
           </div>
           <div className="columnsNumberAll">
-            {renderColNum().map((elem) => {
+            {renderColNum()?.map((elem) => {
               return (
                 <div className="columnsNumber">
                   <span>{elem}</span>
@@ -93,7 +103,8 @@ function Table() {
           <div className="avgSum">
             <span className="avgText">
               {culcAvg(matrice).reduce((next, object) => {
-                return next + (object.amount || object);
+                return next + object;
+                // return next + (object.amount || object);
               }, 0)}
             </span>
           </div>
@@ -101,8 +112,8 @@ function Table() {
       );
     };
 
-    const renderCell = (rowsArr, index) => {
-      return rowsArr.map((obj, indexOf) => {
+    const renderCell = (rowsArr: MatrixCell[], index: number) => {
+      return rowsArr.map((obj: MatrixCell, indexOf: number) => {
         return (
           <div
             className="rowsNum"
@@ -112,13 +123,13 @@ function Table() {
                 : 'aquamarine',
             }}
             onMouseEnter={(event) => {
-              event.target.style.background = '#e63946';
-              event.target.style.color = 'white';
+              // event.target.style.background = '#e63946';
+              // event.target.style.color = 'white';
               findClosestNum(obj.amount);
             }}
             onMouseLeave={(event) => {
-              event.target.style.background = 'aquamarine';
-              setCloseNumbers(null);
+              // event.target.style.background = 'aquamarine';
+              setCloseNumbers(undefined);
             }}
             onClick={() => {
               dispatchIncrement(index, indexOf, obj);
@@ -139,7 +150,7 @@ function Table() {
       });
     };
 
-    const renderSumColumn = (index, rowsArr) => {
+    const renderSumColumn = (index: number, rowsArr: MatrixCell[]) => {
       return (
         <div
           className="sum"
@@ -147,19 +158,20 @@ function Table() {
             setIndexOfArray(index);
           }}
           onMouseOut={() => {
-            setIndexOfArray(null);
+            setIndexOfArray(undefined);
           }}
         >
           <span className="sumText">
             {rowsArr.reduce((next, object) => {
               return next + object.amount;
+              // return next + (object.amount || object);
             }, 0)}
           </span>
         </div>
       );
     };
 
-    const culcPercent = (obj, rowsArr) => {
+    const culcPercent = (obj: MatrixCell, rowsArr: MatrixCell[]) => {
       let percent = `${Math.round(
         (obj.amount /
           rowsArr.reduce((next, object) => {
